@@ -11,7 +11,6 @@ comm==0.2.3
 dalex==1.7.2
 debugpy==1.8.19
 decorator==5.2.1
--e file:///B:/Politechnika/Labs/V%20semester/AI/EPE-prediction-UI
 executing==2.2.1
 fastjsonschema==2.21.2
 gitdb==4.0.12
