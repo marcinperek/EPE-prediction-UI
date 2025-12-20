@@ -53,7 +53,7 @@ if st.session_state.language_select == "English":
                 st.error("Please enter a valid number for MRI Lesion size.")
             else:
                 with st.spinner('Predicting...'):
-                    prediction, prediction_prob = get_prediction(st.session_state, model, preprocessor, target="N+")
+                    prediction, prediction_prob, df = get_prediction(st.session_state, model, preprocessor, target="N+")
                 
                 # bg_color = "#77dd77"
                 bg_color = "green"
@@ -122,7 +122,7 @@ elif st.session_state.language_select == "Polski":
                 st.error("Please enter a valid number for MRI Lesion size.")
             else:
                 with st.spinner('Przewiduwanie...'):
-                    prediction, prediction_prob = get_prediction(st.session_state, model, preprocessor, target="N+")
+                    prediction, prediction_prob, df = get_prediction(st.session_state, model, preprocessor, target="N+")
                 
                 # bg_color = "#77dd77"
                 bg_color = "green"
