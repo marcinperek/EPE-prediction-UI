@@ -94,15 +94,15 @@ elif st.session_state.language_select == "Polski":
                 st.write("## Ogólne")
                 st.number_input("Wiek", key="wiek", min_value=0, max_value=100, value=None, step=1)
                 st.number_input("PSA", key="PSA", min_value=0.0, max_value=1000.0, value=None, step=0.01)
-                st.write("## Wyniki biopsji")
-                st.selectbox("Gleason", key="Bx ISUP Grade", options=[0,1,2,3,4,5])
-            with form_col2:
                 st.write("## Wyniki MRI")
                 st.number_input("Objętość", key="MRI vol", min_value=0.0, max_value=None, value=None, step=0.1)
                 st.number_input("Rozmiar zmiany", key="MRI SIZE", min_value=0.0, max_value=None, value=None, step=0.1)
+            with form_col2:
                 st.selectbox("Pirads", options=[1,2,3,4,5], key="MRI Pirads")
                 st.selectbox("EPE", key="MRI EPE", options=["Nie","Tak"])
                 st.selectbox("SVI", key="MRI SVI", options=["Nie","Tak"])
+                st.write("## Wyniki biopsji")
+                st.selectbox("Gleason", key="Bx ISUP Grade", options=[0,1,2,3,4,5])
 
             st.divider()
 
