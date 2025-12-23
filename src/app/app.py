@@ -1,5 +1,5 @@
 import streamlit as st
-from utils.app_config import load_config
+from utils.app_utils import load_config
 
 load_config("Main")
 

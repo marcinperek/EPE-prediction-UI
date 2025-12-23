@@ -53,3 +53,11 @@ def load_config(page_title):
         </style>""",
         unsafe_allow_html=True,
     )
+
+def clear_on_page_change(st, page_name):
+    if st.session_state.get("current_page") != page_name:
+        st.session_state["current_page"] = page_name
+        keys_to_clear = ["prediction", "prediction_prob", "patient", "explanation"]
+        for key in keys_to_clear:
+            if key in st.session_state:
+                st.session_state.pop(key)

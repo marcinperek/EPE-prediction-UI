@@ -1,10 +1,11 @@
 import streamlit as st
 from utils.model import load_model, load_preprocessor
 from scripts.inference import get_prediction
-from utils.app_config import load_config
+from utils.app_utils import load_config, clear_on_page_change
 from utils.app_translations import get_n_plus_translations
 from scripts.explainer import get_explanation
 
+clear_on_page_change(st, "N+")
 
 st.session_state.setdefault('language', 'English')
 
