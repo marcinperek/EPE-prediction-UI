@@ -91,6 +91,6 @@ with col2:
         explain = st.button(labels['explanation_button'], key='explain_button')
         if explain:
             with st.spinner(labels['generating_explanation']):
-                st.session_state['explanation'] = get_explanation(st.session_state['patient'], model, preprocessor)
+                st.session_state['explanation'] = get_explanation(st.session_state['patient'], model, preprocessor, target='EPE')
         if 'explanation' in st.session_state and st.session_state['explanation'] is not None:
                 st.plotly_chart(st.session_state['explanation'], width='stretch')
