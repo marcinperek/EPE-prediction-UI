@@ -157,3 +157,23 @@ def get_n_plus_translations(language="English"):
     }
 
     return dictionary[language]
+
+def get_index_translations(language="English"):
+    dictionary =  {
+        "English": {
+            "short_title": "EPE Prediction App",
+            "language_select": "Language",
+            "title": "Welcome to the EPE Prediction App",
+            "instructions": "Use the navigation menu to access different prediction models.",
+            "description": "This application allows you to predict Extraprostatic Extension (EPE) and N+ status based on patient data."
+        },
+        "Polski": {
+            "short_title": "Aplikacja do Predykcji EPE",
+            "language_select": "Język",
+            "title": "Witamy w Aplikacji do Predykcji Naciekania Pozatorebkowego (EPE)",
+            "instructions": "Użyj menu nawigacyjnego, aby uzyskać dostęp do różnych modeli predykcyjnych.",
+            "description": "Ta aplikacja umożliwia przewidywanie naciekania pozatorebkowego (EPE) oraz statusu N+ na podstawie danych pacjenta."
+        }
+    }
+
+    return dictionary[language]
