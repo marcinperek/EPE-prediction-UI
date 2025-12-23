@@ -2,144 +2,89 @@ import streamlit as st
 from utils.model import load_model, load_preprocessor
 from scripts.inference import get_prediction
 from utils.app_config import load_config
-
-load_config("N+ Prediction")
-st.session_state.setdefault("language_select", "English")
-label = "Język" if st.session_state["language_select"] == "Polski" else "Language"
-st.sidebar.selectbox(label, options=["English", "Polski"], index=0, key="language_select")
-
-if st.session_state.language_select == "English":
-    with st.spinner('Loading model...'):
-        model = load_model("models/xgb_n_plus_model.json")
-        preprocessor = load_preprocessor("models/preprocessor_n_plus.pkl")
-
-    st.markdown("<h1 style='font-size:50px; margin-bottom:0.5rem;'>N+ Prediction</h1>", unsafe_allow_html=True)
-    st.warning('This model is not suitable for medical use. For research purposes only.', icon="⚠️")
-
-    col1, col2 = st.columns([1, 1], gap="large")
-
-    with col1:
-        with st.form("input_form"):
-            form_col1, form_col2 = st.columns([1, 1], gap="large")
-            with form_col1:
-                st.write("## General")
-                st.number_input("Age", key="wiek", min_value=0, max_value=100, value=None, step=1)
-                st.number_input("PSA", key="PSA", min_value=0.0, max_value=1000.0, value=None, step=0.01)
-                st.write("## MRI Features")
-                st.number_input("Volume", key="MRI vol", min_value=0.0, max_value=None, value=None, step=0.1)
-                st.number_input("Lesion size", key="MRI SIZE", min_value=0.0, max_value=None, value=None, step=0.1)
-            with form_col2:
-                st.selectbox("Pirads", options=[1,2,3,4,5], key="MRI Pirads")
-                st.selectbox("EPE", key="MRI EPE", options=["No","Yes"])
-                st.selectbox("SVI", key="MRI SVI", options=["No","Yes"])
-                st.write("## Biopsy Features")
-                st.selectbox("ISUP Grade", key="Bx ISUP Grade", options=[0,1,2,3,4,5])
-
-            st.divider()
-
-            submitted = st.form_submit_button("Predict", width='stretch', key="predict_button")
+from utils.app_translations import get_n_plus_translations
+from scripts.explainer import get_explanation
 
 
-    with col2:
-        st.write("## Model Prediction")   
-        if submitted:
-            if st.session_state["wiek"] is None:
-                st.error("Please enter a valid number for Age.")
-            elif st.session_state["PSA"] is None:
-                st.error("Please enter a valid number for PSA.")
-            elif st.session_state["MRI vol"] is None:
-                st.error("Please enter a valid number for MRI Volume.")
-            elif st.session_state["MRI SIZE"] is None:
-                st.error("Please enter a valid number for MRI Lesion size.")
-            else:
-                with st.spinner('Predicting...'):
-                    prediction, prediction_prob, df = get_prediction(st.session_state, model, preprocessor, target="N+")
-                
-                # bg_color = "#77dd77"
-                bg_color = "green"
-                if prediction_prob[0] > 0.8:
-                    # bg_color = "#f8625a"
-                    bg_color = "red"
-                elif prediction_prob[0] > 0.5:
-                    # bg_color = "#ffd580"
-                    # bg_color = "#3e4116"
-                    bg_color = "orange"
-                st.divider()
-                col3, col4 = st.columns([1, 1], gap="small")
-                with col3:
-                    st.markdown(f"### N+ present?", unsafe_allow_html=True)
-                    st.markdown(f"### Probability of N+ present:", unsafe_allow_html=True)
-                with col4:
-                    st.markdown(f"### <span id='result' style='color:white; background:{bg_color}'> {"yes" if prediction[0] else "no"}</span>", unsafe_allow_html=True)
-                    st.markdown(f"### <span id='result' style='color:white; background:{bg_color}'>{prediction_prob[0]:.2f}</span>", unsafe_allow_html=True)
-                
-                st.divider()
+st.session_state.setdefault('language', 'English')
 
-elif st.session_state.language_select == "Polski":
-    with st.spinner('Ładowanie modelu...'):
-        model = load_model("models/xgb_n_plus_model.json")
-        preprocessor = load_preprocessor("models/preprocessor_n_plus.pkl")
+labels = get_n_plus_translations(st.session_state['language'])
 
-    st.markdown("<h1 style='font-size:50px; margin-bottom:0.5rem;'>Predykcja N+</h1>", unsafe_allow_html=True)
-    st.warning('Ten model nie nadaje się do użytku medycznego. Tylko do celów badawczych.', icon="⚠️")
+load_config(labels['title'])
+
+st.sidebar.selectbox(labels['language_select'], options=['English', 'Polski'], index=0, key='language')
 
 
+with st.spinner(labels['loading_model']):
+    model = load_model("models/xgb_n_plus_model.json")
+    preprocessor = load_preprocessor("models/preprocessor_n_plus.pkl")
 
-    col1, col2 = st.columns([1, 1], gap="large")
+st.markdown(f"<h1 style='font-size:50px; margin-bottom:0.5rem;'>{labels['title']}</h1>", unsafe_allow_html=True)
+st.warning(labels['warning'], icon='⚠️')
 
-    with col1:
-        with st.form("input_form"):
-            form_col1, form_col2 = st.columns([1, 1], gap="large")
-            with form_col1:
-                st.write("## Ogólne")
-                st.number_input("Wiek", key="wiek", min_value=0, max_value=100, value=None, step=1)
-                st.number_input("PSA", key="PSA", min_value=0.0, max_value=1000.0, value=None, step=0.01)
-                st.write("## Wyniki MRI")
-                st.number_input("Objętość", key="MRI vol", min_value=0.0, max_value=None, value=None, step=0.1)
-                st.number_input("Rozmiar zmiany", key="MRI SIZE", min_value=0.0, max_value=None, value=None, step=0.1)
-            with form_col2:
-                st.selectbox("Pirads", options=[1,2,3,4,5], key="MRI Pirads")
-                st.selectbox("EPE", key="MRI EPE", options=["Nie","Tak"])
-                st.selectbox("SVI", key="MRI SVI", options=["Nie","Tak"])
-                st.write("## Wyniki biopsji")
-                st.selectbox("Gleason", key="Bx ISUP Grade", options=[0,1,2,3,4,5])
+col1, col2 = st.columns(2, gap='large')
 
-            st.divider()
+with col1:
+    with st.form('input_form'):
+        form_col1, form_col2 = st.columns(2, gap='large')
+        with form_col1:
+            st.write(f'## {labels['general_section']}')
+            st.number_input(labels['age'], key='wiek', min_value=0, max_value=100, value=None, step=1)
+            st.number_input(labels['psa'], key='PSA', min_value=0.0, max_value=None, value=None, step=0.01)
+            st.write(f'## {labels['mri_section']}')
+            st.number_input(labels['mri_volume'], key='MRI vol', min_value=0.0, max_value=None, value=None, step=0.1)
+            st.number_input(labels['mri_lesion'], key='MRI SIZE', min_value=0.0, max_value=None, value=None, step=0.1)
+        with form_col2:
+            st.selectbox(labels['mri_pirads'], options=[1,2,3,4,5], key='MRI Pirads')
+            st.selectbox(labels['mri_epe'], key='MRI EPE', options=[labels['no'],labels['yes']])
+            st.selectbox(labels['mri_svi'], key='MRI SVI', options=[labels['no'],labels['yes']])
+            st.write(f'## {labels['biopsy_section']}')
+            st.selectbox(labels['bx_isup_grade'], key='Bx ISUP Grade', options=[0,1,2,3,4,5])
 
-            submitted = st.form_submit_button("Sprawdź", width='stretch', key="predict_button")
+        st.divider()
 
+        submitted = st.form_submit_button(labels['predict_button'], width='stretch', key='predict_button')
 
-    with col2:
-        st.write("## Wynik modelu")   
-        if submitted:
-            if st.session_state["wiek"] is None:
-                st.error("Please enter a valid number for Age.")
-            elif st.session_state["PSA"] is None:
-                st.error("Please enter a valid number for PSA.")
-            elif st.session_state["MRI vol"] is None:
-                st.error("Please enter a valid number for MRI Volume.")
-            elif st.session_state["MRI SIZE"] is None:
-                st.error("Please enter a valid number for MRI Lesion size.")
-            else:
-                with st.spinner('Przewiduwanie...'):
-                    prediction, prediction_prob, df = get_prediction(st.session_state, model, preprocessor, target="N+")
-                
-                # bg_color = "#77dd77"
-                bg_color = "green"
-                if prediction_prob[0] > 0.8:
-                    # bg_color = "#f8625a"
-                    bg_color = "red"
-                elif prediction_prob[0] > 0.5:
-                    # bg_color = "#ffd580"
-                    # bg_color = "#3e4116"
-                    bg_color = "orange"
-                st.divider()
-                col3, col4 = st.columns([1, 1], gap="small")
-                with col3:
-                    st.markdown(f"### Czy N+ jest obecne?", unsafe_allow_html=True)
-                    st.markdown(f"### Prawdopodobieństwo wystąpienia N+:", unsafe_allow_html=True)
-                with col4:
-                    st.markdown(f"### <span id='result' style='color:white; background:{bg_color}'> {"tak" if prediction[0] else "nie"}</span>", unsafe_allow_html=True)
-                    st.markdown(f"### <span id='result' style='color:white; background:{bg_color}'>{prediction_prob[0]:.2f}</span>", unsafe_allow_html=True)
-                
-                st.divider()
+with col2:
+    st.write(f'## {labels['model_prediction']}')
+    if submitted:
+        if st.session_state['wiek'] is None:
+            st.error(labels['age_error'])
+        elif st.session_state['PSA'] is None:
+            st.error(labels['psa_error'])
+        elif st.session_state['MRI vol'] is None:
+            st.error(labels['mri_volume_error'])
+        elif st.session_state['MRI SIZE'] is None:
+            st.error(labels['mri_lesion_error'])
+        else:
+            with st.spinner(labels['predicting']):
+                prediction, prediction_prob, patient = get_prediction(st.session_state, model, preprocessor, target='N+')
+                st.session_state['prediction'] = prediction
+                st.session_state['prediction_prob'] = prediction_prob
+                st.session_state['patient'] = patient
+                st.session_state['explanation'] = None
+
+    if 'prediction' in st.session_state and 'prediction_prob' in st.session_state:
+        bg_color = 'green'
+        if st.session_state['prediction_prob'][0] > 0.8:
+            bg_color = 'red'
+        elif st.session_state['prediction_prob'][0] > 0.5:
+            bg_color = 'orange'
+        st.divider()
+        col3, col4 = st.columns([1, 1], gap='small')
+        with col3:
+            st.markdown(f'### {labels['prediction']}', unsafe_allow_html=True)
+            st.markdown(f'### {labels['probability']}', unsafe_allow_html=True)
+        with col4:
+            st.markdown(f"### <span id='result' style='color:white; background:{bg_color}'> {labels['yes'] if st.session_state['prediction'][0] else labels['no']}</span>", unsafe_allow_html=True)
+            st.markdown(f"### <span id='result' style='color:white; background:{bg_color}'>{st.session_state['prediction_prob'][0]:.2f}</span>", unsafe_allow_html=True)
+        
+        st.divider()
+
+        st.write(f'## {labels["explanation_section"]}')
+        explain = st.button(labels['explanation_button'], key='explain_button')
+        if explain:
+            with st.spinner(labels['generating_explanation']):
+                st.session_state['explanation'] = get_explanation(st.session_state['patient'], model, preprocessor, target='N+')
+        if 'explanation' in st.session_state and st.session_state['explanation'] is not None:
+                st.plotly_chart(st.session_state['explanation'], width='stretch')

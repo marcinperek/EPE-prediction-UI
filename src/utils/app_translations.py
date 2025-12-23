@@ -83,3 +83,77 @@ def get_epe_translations(language="English"):
     }
 
     return dictionary[language]
+
+def get_n_plus_translations(language="English"):
+    dictionary =  {
+        "English": {
+            "title": "N+ Prediction",
+            "warning": "This model is not suitable for medical use. For research purposes only.",
+            "loading_model": "Loading model...",
+            "language_select": "Language",
+
+            "predict_button": "Predict",
+            "general_section": "General",
+            "mri_section": "MRI Features",
+            "biopsy_section": "Biopsy Features",
+            "age": "Age",
+            "psa": "PSA",
+            "mri_volume": "Volume",
+            "mri_lesion": "Lesion size",
+            "mri_pirads": "Pirads",
+            "mri_epe": "EPE",
+            "mri_svi": "SVI",
+            "bx_isup_grade": "ISUP Grade",
+
+            "model_prediction": "Model Prediction",
+            "age_error": "Please enter a valid number for Age.",
+            "psa_error": "Please enter a valid number for PSA.",
+            "mri_volume_error": "Please enter a valid number for MRI Volume.",
+            "mri_lesion_error": "Please enter a valid number for MRI Lesion size.",
+            "predicting": "Predicting...",
+            "prediction": "N+ present?",
+            "probability": "Probability of N+ present:",
+            "yes": "Yes",
+            "no": "No",
+
+            "explanation_section": "Model Explanation",
+            "explanation_button": "Show Explanation",
+            "generating_explanation": "Generating explanation..."
+        },
+        "Polski": {
+            "title": "Predykcja naciekania na węzły chłonne (N+)",
+            "warning": "Ten model nie nadaje się do użytku medycznego. Tylko do celów badawczych.",
+            "loading_model": "Ładowanie modelu...",
+            "language_select": "Język",
+
+            "predict_button": "Sprawdź",
+            "general_section": "Ogólne",
+            "mri_section": "Cechy MRI",
+            "biopsy_section": "Cechy biopsji",
+            "age": "Wiek",
+            "psa": "PSA",
+            "mri_volume": "Objętość",
+            "mri_lesion": "Rozmiar zmiany",
+            "mri_pirads": "Pirads",
+            "mri_epe": "EPE",
+            "mri_svi": "SVI",
+            "bx_isup_grade": "Stopień ISUP",
+
+            "model_prediction": "Predykcja Modelu",
+            "age_error": "Proszę wprowadzić prawidłowy Wiek.",
+            "psa_error": "Proszę wprowadzić prawidłową wartość PSA.",
+            "mri_volume_error": "Proszę wprowadzić prawidłową Objętość MRI.",
+            "mri_lesion_error": "Proszę wprowadzić prawidłowy Rozmiar zmiany MRI.",
+            "predicting": "Przewidywanie...",
+            "prediction": "Czy N+ jest obecne?",
+            "probability": "Prawdopodobieństwo obecności N+:",
+            "yes": "Tak",
+            "no": "Nie",
+
+            "explanation_section": "Wyjaśnienie Modelu",
+            "explanation_button": "Pokaż Wyjaśnienie",
+            "generating_explanation": "Generowanie wyjaśnienia..."
+        }
+    }
+
+    return dictionary[language]
