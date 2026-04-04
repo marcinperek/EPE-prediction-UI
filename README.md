@@ -8,7 +8,7 @@ Currently there are 2 models available for use:
 - predicting Extraprostatic Extension (EPE)
 - predicting Nodal Involvment (N+)
   
-This app is hosted on [Streamlit Community Cloud]()
+This app is hosted on [Streamlit Community Cloud](https://epe-prediction-model.streamlit.app/)
 
 > [!CAUTION]
 > The predictions of the model are not medically verified and must be treated only as a reference. 
@@ -29,7 +29,7 @@ Obecnie dostępne są 2 modele:
 - predykcja Naciekania Pozatorebkowego (EPE)
 - predykcja Przerzutów do Węzłów Chłonnych (N+)
 
-Aplikacja jest hostowana na [Streamlit Community Cloud]()
+Aplikacja jest hostowana na [Streamlit Community Cloud](https://epe-prediction-model.streamlit.app/)
 
 > [!CAUTION]
 > Predykcje modelu nie są zweryfikowane medycznie i należy je traktować wyłącznie jako odniesienie.
